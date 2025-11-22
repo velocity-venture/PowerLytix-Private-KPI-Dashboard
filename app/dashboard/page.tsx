@@ -13,7 +13,7 @@ import { DateRangePicker, DateRange } from '@/components/date-range-picker';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { motion } from 'framer-motion';
 import { exportToPDF, exportToExcel } from '@/lib/export-utils';
-import { subDays } from 'date-fns';
+import { subDays, differenceInDays } from 'date-fns';
 
 // Generate sparkline data
 const generateSparklineData = (baseValue: number, volatility: number = 0.1) => {
@@ -77,8 +77,17 @@ export default function DashboardPage() {
     to: new Date(),
   });
 
-  const revenueData = generateTrendData(45000, selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 90);
-  const leadsData = Array.from({ length: selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 90 }, (_, i) => ({
+  // Calculate days for charts based on selected period or custom range
+  const getDaysCount = () => {
+    if (selectedPeriod === 'custom') {
+      return differenceInDays(dateRange.to, dateRange.from);
+    }
+    return selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 90;
+  };
+
+  const daysCount = getDaysCount();
+  const revenueData = generateTrendData(45000, daysCount);
+  const leadsData = Array.from({ length: daysCount }, (_, i) => ({
     day: i + 1,
     leads: Math.floor(Math.random() * 50) + 30,
     appointments: Math.floor(Math.random() * 35) + 20,
@@ -90,6 +99,30 @@ export default function DashboardPage() {
 
   if (!mounted) return null;
 
+  const handlePeriodChange = (period: string) => {
+    setSelectedPeriod(period);
+    // Update dateRange to match the preset period
+    if (period === '7d') {
+      setDateRange({ from: subDays(new Date(), 7), to: new Date() });
+    } else if (period === '30d') {
+      setDateRange({ from: subDays(new Date(), 30), to: new Date() });
+    } else if (period === '90d') {
+      setDateRange({ from: subDays(new Date(), 90), to: new Date() });
+    }
+  };
+
+  const handleDateRangeChange = (range: DateRange) => {
+    setDateRange(range);
+    setSelectedPeriod('custom'); // Switch to custom mode
+  };
+
+  const getPeriodLabel = () => {
+    if (selectedPeriod === 'custom') {
+      return `${daysCount} Days (Custom)`;
+    }
+    return selectedPeriod === '7d' ? '7 Days' : selectedPeriod === '30d' ? '30 Days' : '90 Days';
+  };
+
   const handleExportPDF = () => {
     const allData = {
       'Top-Line Rollup': demoData.topLine.map(k => ({ ...k, value: k.prefix ? `${k.prefix}${k.value}` : k.value })),
@@ -97,7 +130,7 @@ export default function DashboardPage() {
       'Call Center': demoData.callCenter.map(k => ({ ...k, value: `${k.value}${k.suffix || ''}` })),
       'Sales': demoData.sales.map(k => ({ ...k, value: k.prefix ? `${k.prefix}${k.value}${k.suffix || ''}` : `${k.value}${k.suffix || ''}` })),
     };
-    exportToPDF(allData, `Last ${selectedPeriod}`);
+    exportToPDF(allData, getPeriodLabel());
   };
 
   const handleExportExcel = () => {
@@ -107,7 +140,7 @@ export default function DashboardPage() {
       'Call Center': demoData.callCenter.map(k => ({ ...k, value: `${k.value}${k.suffix || ''}` })),
       'Sales': demoData.sales.map(k => ({ ...k, value: k.prefix ? `${k.prefix}${k.value}${k.suffix || ''}` : `${k.value}${k.suffix || ''}` })),
     };
-    exportToExcel(allData, `Last ${selectedPeriod}`);
+    exportToExcel(allData, getPeriodLabel());
   };
 
   return (
@@ -166,7 +199,7 @@ export default function DashboardPage() {
                 key={period}
                 variant={selectedPeriod === period ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setSelectedPeriod(period)}
+                onClick={() => handlePeriodChange(period)}
                 className={selectedPeriod === period ? 'bg-gradient-to-r from-blue-600 to-indigo-600' : ''}
               >
                 {period === '7d' ? '7 days' : period === '30d' ? '30 days' : '90 days'}
@@ -174,7 +207,7 @@ export default function DashboardPage() {
             ))}
             <DateRangePicker
               dateRange={dateRange}
-              onDateRangeChange={setDateRange}
+              onDateRangeChange={handleDateRangeChange}
             />
           </div>
 
@@ -297,7 +330,7 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-green-600" />
-                Revenue Trend ({selectedPeriod === '7d' ? '7' : selectedPeriod === '30d' ? '30' : '90'} Days)
+                Revenue Trend ({getPeriodLabel()})
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -325,7 +358,7 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-indigo-600" />
-                Leads vs Appointments ({selectedPeriod === '7d' ? '7' : selectedPeriod === '30d' ? '30' : '90'} Days)
+                Leads vs Appointments ({getPeriodLabel()})
               </CardTitle>
             </CardHeader>
             <CardContent>

@@ -1,72 +1,73 @@
 ﻿'use client';
 
-import * as React from 'react';
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Calendar } from 'lucide-react';
-import { format } from 'date-fns';
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
-export type DateRange = {
+export interface DateRange {
   from: Date;
   to: Date;
-};
+}
 
 interface DateRangePickerProps {
   dateRange: DateRange;
   onDateRangeChange: (range: DateRange) => void;
-  className?: string;
 }
 
-export function DateRangePicker({
-  dateRange,
-  onDateRangeChange,
-  className,
-}: DateRangePickerProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+export function DateRangePicker({ dateRange, onDateRangeChange }: DateRangePickerProps) {
+  const [startDate, setStartDate] = useState<Date>(dateRange.from);
+  const [endDate, setEndDate] = useState<Date>(dateRange.to);
+
+  const handleStartDateChange = (date: Date | null) => {
+    if (date) {
+      setStartDate(date);
+      // If end date is before new start date, adjust it
+      if (endDate < date) {
+        setEndDate(date);
+        onDateRangeChange({ from: date, to: date });
+      } else {
+        onDateRangeChange({ from: date, to: endDate });
+      }
+    }
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    if (date) {
+      setEndDate(date);
+      onDateRangeChange({ from: startDate, to: date });
+    }
+  };
 
   return (
-    <div className={cn('relative', className)}>
-      <Button
-        variant="outline"
-        className={cn(
-          'justify-start text-left font-normal',
-          !dateRange && 'text-muted-foreground'
-        )}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <Calendar className="mr-2 h-4 w-4" />
-        {dateRange?.from ? (
-          dateRange.to ? (
-            <>
-              {format(dateRange.from, 'LLL dd, y')} -{' '}
-              {format(dateRange.to, 'LLL dd, y')}
-            </>
-          ) : (
-            format(dateRange.from, 'LLL dd, y')
-          )
-        ) : (
-          <span>Pick a date range</span>
-        )}
-      </Button>
-      {isOpen && (
-        <Card className="absolute top-full mt-2 z-50 p-4 shadow-lg">
-          <DayPicker
-            mode="range"
-            selected={{ from: dateRange.from, to: dateRange.to }}
-            onSelect={(range) => {
-              if (range?.from && range?.to) {
-                onDateRangeChange({ from: range.from, to: range.to });
-                setIsOpen(false);
-              }
-            }}
-            numberOfMonths={2}
-          />
-        </Card>
-      )}
+    <div className="flex items-center gap-2 bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm">
+      <Calendar className="h-4 w-4 text-gray-500" />
+      <div className="flex items-center gap-2">
+        <DatePicker
+          selected={startDate}
+          onChange={handleStartDateChange}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+          maxDate={new Date()}
+          dateFormat="MMM d, yyyy"
+          className="w-32 text-sm border-none focus:outline-none focus:ring-0 cursor-pointer"
+          placeholderText="Start date"
+        />
+        <span className="text-gray-400">→</span>
+        <DatePicker
+          selected={endDate}
+          onChange={handleEndDateChange}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+          maxDate={new Date()}
+          dateFormat="MMM d, yyyy"
+          className="w-32 text-sm border-none focus:outline-none focus:ring-0 cursor-pointer"
+          placeholderText="End date"
+        />
+      </div>
     </div>
   );
 }
