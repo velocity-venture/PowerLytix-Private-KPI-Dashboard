@@ -20,3 +20,9 @@ next-env.d.ts
 *.swp
 *.swo
 "@ | Out-File -FilePath ".gitignore" -Encoding UTF8
+
+# Exclude executables
+*.exe
+
+# Exclude executables
+*.exe
