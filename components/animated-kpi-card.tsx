@@ -16,6 +16,9 @@ interface KPICardProps {
   suffix?: string;
   decimals?: number;
   index?: number;
+  // NEW: Comparison props
+  comparisonMode?: 'none' | 'deltas' | 'overlay' | 'sidebyside';
+  previousValue?: number;
 }
 
 export function AnimatedKPICard({
@@ -27,14 +30,30 @@ export function AnimatedKPICard({
   prefix = '',
   suffix = '',
   decimals = 0,
-  index = 0
+  index = 0,
+  comparisonMode = 'none',
+  previousValue
 }: KPICardProps) {
   // Extract numeric value for count-up animation
-  const numericValue = typeof value === 'string' 
-    ? parseFloat(value.replace(/[^0-9.-]+/g, '')) 
+  const numericValue = typeof value === 'string'
+    ? parseFloat(value.replace(/[^0-9.-]+/g, ''))
     : value;
 
   const isNumeric = !isNaN(numericValue);
+
+  // Calculate comparison delta
+  const calculateDelta = () => {
+    if (!previousValue || !isNumeric) return null;
+    const delta = numericValue - previousValue;
+    const percentChange = ((delta / previousValue) * 100).toFixed(1);
+    return {
+      value: delta,
+      percent: percentChange,
+      isPositive: delta >= 0
+    };
+  };
+
+  const delta = comparisonMode === 'deltas' ? calculateDelta() : null;
 
   return (
     <motion.div
@@ -92,10 +111,10 @@ export function AnimatedKPICard({
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: index * 0.05 + 0.3 }}
               className={`flex items-center text-sm font-semibold px-2 py-1 rounded-full ${
-                trend === 'up' 
-                  ? 'text-green-700 bg-green-100' 
-                  : trend === 'down' 
-                  ? 'text-red-700 bg-red-100' 
+                trend === 'up'
+                  ? 'text-green-700 bg-green-100'
+                  : trend === 'down'
+                  ? 'text-red-700 bg-red-100'
                   : 'text-gray-700 bg-gray-100'
               }`}
             >
@@ -105,6 +124,37 @@ export function AnimatedKPICard({
               <span>{Math.abs(change)}%</span>
             </motion.div>
           </div>
+
+          {/* NEW: Comparison Delta Display */}
+          {delta && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="pt-2 border-t border-gray-200"
+            >
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-500">
+                  vs. Previous: {prefix}{previousValue?.toLocaleString()}{suffix}
+                </span>
+                <div className={`flex items-center font-semibold ${
+                  delta.isPositive ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {delta.isPositive ? (
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                  ) : (
+                    <TrendingDown className="w-3 h-3 mr-1" />
+                  )}
+                  <span>{delta.isPositive ? '+' : ''}{delta.percent}%</span>
+                </div>
+              </div>
+              <div className={`text-xs font-medium mt-1 ${
+                delta.isPositive ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {delta.isPositive ? '+' : ''}{prefix}{delta.value.toLocaleString()}{suffix}
+              </div>
+            </motion.div>
+          )}
 
           {/* Sparkline Chart */}
           {sparklineData.length > 0 && (

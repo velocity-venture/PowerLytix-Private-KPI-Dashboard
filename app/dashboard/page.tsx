@@ -34,29 +34,29 @@ const generateTrendData = (baseValue: number, days: number = 30) => {
 
 const demoData = {
   topLine: [
-    { id: '1', title: 'Total Marketing Spend', value: 45230, change: 8.2, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(45230) },
-    { id: '2', title: 'Total Leads', value: 1247, change: 12.5, trend: 'up' as const, sparkline: generateSparklineData(1247) },
-    { id: '3', title: 'Total Appointments', value: 892, change: 5.3, trend: 'up' as const, sparkline: generateSparklineData(892) },
-    { id: '4', title: 'Total Sales', value: 234, change: -2.1, trend: 'down' as const, sparkline: generateSparklineData(234) },
-    { id: '5', title: 'Net Revenue (Sold)', value: 1200000, change: 15.7, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(1200000) },
+    { id: '1', title: 'Total Marketing Spend', value: 45230, change: 8.2, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(45230), previousValue: 41800 },
+    { id: '2', title: 'Total Leads', value: 1247, change: 12.5, trend: 'up' as const, sparkline: generateSparklineData(1247), previousValue: 1108 },
+    { id: '3', title: 'Total Appointments', value: 892, change: 5.3, trend: 'up' as const, sparkline: generateSparklineData(892), previousValue: 847 },
+    { id: '4', title: 'Total Sales', value: 234, change: -2.1, trend: 'down' as const, sparkline: generateSparklineData(234), previousValue: 239 },
+    { id: '5', title: 'Net Revenue (Sold)', value: 1200000, change: 15.7, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(1200000), previousValue: 1037000 },
   ],
   marketing: [
-    { id: '6', title: 'Google Ads Spend', value: 18450, change: 5.2, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(18450) },
-    { id: '7', title: 'Facebook Leads', value: 423, change: 18.3, trend: 'up' as const, sparkline: generateSparklineData(423) },
-    { id: '8', title: 'Cost Per Lead', value: 36.28, change: -8.5, trend: 'down' as const, prefix: '$', decimals: 2, sparkline: generateSparklineData(36.28) },
-    { id: '9', title: 'ROAS', value: 4.2, change: 12.1, trend: 'up' as const, suffix: 'x', decimals: 1, sparkline: generateSparklineData(4.2, 0.2) },
+    { id: '6', title: 'Google Ads Spend', value: 18450, change: 5.2, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(18450), previousValue: 17530 },
+    { id: '7', title: 'Facebook Leads', value: 423, change: 18.3, trend: 'up' as const, sparkline: generateSparklineData(423), previousValue: 357 },
+    { id: '8', title: 'Cost Per Lead', value: 36.28, change: -8.5, trend: 'down' as const, prefix: '$', decimals: 2, sparkline: generateSparklineData(36.28), previousValue: 39.65 },
+    { id: '9', title: 'ROAS', value: 4.2, change: 12.1, trend: 'up' as const, suffix: 'x', decimals: 1, sparkline: generateSparklineData(4.2, 0.2), previousValue: 3.75 },
   ],
   callCenter: [
-    { id: '10', title: 'Leads Received', value: 847, change: 9.2, trend: 'up' as const, sparkline: generateSparklineData(847) },
-    { id: '11', title: 'Appointment Set Rate', value: 68.5, change: 3.4, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(68.5, 0.05) },
-    { id: '12', title: 'Speed to Lead', value: 4.2, change: -15.3, trend: 'down' as const, suffix: ' mins', decimals: 1, sparkline: generateSparklineData(4.2, 0.3) },
-    { id: '13', title: 'Confirmation Rate', value: 82.1, change: 5.7, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(82.1, 0.05) },
+    { id: '10', title: 'Leads Received', value: 847, change: 9.2, trend: 'up' as const, sparkline: generateSparklineData(847), previousValue: 776 },
+    { id: '11', title: 'Appointment Set Rate', value: 68.5, change: 3.4, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(68.5, 0.05), previousValue: 66.25 },
+    { id: '12', title: 'Speed to Lead', value: 4.2, change: -15.3, trend: 'down' as const, suffix: ' mins', decimals: 1, sparkline: generateSparklineData(4.2, 0.3), previousValue: 4.96 },
+    { id: '13', title: 'Confirmation Rate', value: 82.1, change: 5.7, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(82.1, 0.05), previousValue: 77.66 },
   ],
   sales: [
-    { id: '14', title: 'Issued Appointments', value: 580, change: 7.8, trend: 'up' as const, sparkline: generateSparklineData(580) },
-    { id: '15', title: 'Raw Close Rate', value: 40.3, change: 2.1, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(40.3, 0.05) },
-    { id: '16', title: 'Average Sale', value: 5120, change: 8.9, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(5120) },
-    { id: '17', title: 'Gross Margin', value: 28.4, change: 1.2, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(28.4, 0.05) },
+    { id: '14', title: 'Issued Appointments', value: 580, change: 7.8, trend: 'up' as const, sparkline: generateSparklineData(580), previousValue: 538 },
+    { id: '15', title: 'Raw Close Rate', value: 40.3, change: 2.1, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(40.3, 0.05), previousValue: 39.47 },
+    { id: '16', title: 'Average Sale', value: 5120, change: 8.9, trend: 'up' as const, prefix: '$', sparkline: generateSparklineData(5120), previousValue: 4702 },
+    { id: '17', title: 'Gross Margin', value: 28.4, change: 1.2, trend: 'up' as const, suffix: '%', decimals: 1, sparkline: generateSparklineData(28.4, 0.05), previousValue: 28.06 },
   ],
 };
 
@@ -325,7 +325,7 @@ export default function DashboardPage() {
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {demoData.topLine.map((kpi, idx) => (
-            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} />
+            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} comparisonMode={comparisonMode} />
           ))}
         </div>
       </section>
@@ -393,7 +393,7 @@ export default function DashboardPage() {
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {demoData.marketing.map((kpi, idx) => (
-            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} />
+            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} comparisonMode={comparisonMode} />
           ))}
         </div>
       </section>
@@ -406,7 +406,7 @@ export default function DashboardPage() {
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {demoData.callCenter.map((kpi, idx) => (
-            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} />
+            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} comparisonMode={comparisonMode} />
           ))}
         </div>
       </section>
@@ -419,7 +419,7 @@ export default function DashboardPage() {
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {demoData.sales.map((kpi, idx) => (
-            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} />
+            <AnimatedKPICard key={kpi.id} {...kpi} index={idx} comparisonMode={comparisonMode} />
           ))}
         </div>
       </section>
