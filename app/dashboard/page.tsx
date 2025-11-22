@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { AnimatedKPICard } from '@/components/animated-kpi-card';
 import { GoalCard } from '@/components/goal-card';
 import { AlertConfiguration } from '@/components/alert-configuration';
+import { ComparisonSelector, ComparisonMode } from '@/components/comparison-selector';
 import { DateRangePicker, DateRange } from '@/components/date-range-picker';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { motion } from 'framer-motion';
@@ -70,6 +71,7 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [showComparison, setShowComparison] = useState(false);
+  const [comparisonMode, setComparisonMode] = useState<ComparisonMode>('none');
   const [showGoals, setShowGoals] = useState(true);
   const [showAlerts, setShowAlerts] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -179,15 +181,20 @@ export default function DashboardPage() {
               <Bell className="w-4 h-4 mr-2" />
               Alerts
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowComparison(!showComparison)}
-              className={showComparison ? 'bg-green-50' : ''}
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Compare
-            </Button>
+            <ComparisonSelector
+              isActive={showComparison}
+              currentMode={comparisonMode}
+              onModeChange={(mode) => {
+                setComparisonMode(mode);
+                setShowComparison(mode !== 'none');
+              }}
+              onToggle={() => {
+                setShowComparison(!showComparison);
+                if (showComparison) {
+                  setComparisonMode('none');
+                }
+              }}
+            />
           </div>
         </div>
 
@@ -419,3 +426,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
