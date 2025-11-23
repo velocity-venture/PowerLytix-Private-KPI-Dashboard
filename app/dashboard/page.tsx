@@ -70,7 +70,7 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [showComparison, setShowComparison] = useState(false);
-  const [comparisonMode, setComparisonMode] = useState<ComparisonMode>('none');
+  const [comparisonMode, setComparisonMode] = useState<'none' | 'deltas'>('none');
   const [showGoals, setShowGoals] = useState(true);
   const [showAlerts, setShowAlerts] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({
