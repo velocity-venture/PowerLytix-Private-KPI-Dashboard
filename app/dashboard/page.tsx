@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { AnimatedKPICard } from '@/components/animated-kpi-card';
 import { GoalCard } from '@/components/goal-card';
 import { AlertConfiguration } from '@/components/alert-configuration';
-import { ComparisonSelector, ComparisonMode } from '@/components/comparison-selector';
 import { DateRangePicker, DateRange } from '@/components/date-range-picker';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { motion } from 'framer-motion';
@@ -181,18 +180,18 @@ export default function DashboardPage() {
               <Bell className="w-4 h-4 mr-2" />
               Alerts
             </Button>
-            <ComparisonSelector
-              isActive={showComparison}
-              currentMode={comparisonMode}
-              onModeChange={(mode) => {
-                setComparisonMode(mode);
-                setShowComparison(mode !== 'none');
-              }}
-              onToggle={() => {
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
                 setShowComparison(!showComparison);
-                if (showComparison) {
-                  setComparisonMode('none');
-                }
+                setComparisonMode(showComparison ? 'none' : 'deltas');
+              }}
+              className={showComparison ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Compare {showComparison && '(Deltas)'}
+            </Button>
               }}
             />
           </div>
@@ -426,4 +425,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
 
