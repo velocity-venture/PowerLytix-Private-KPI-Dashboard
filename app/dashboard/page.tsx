@@ -192,8 +192,6 @@ export default function DashboardPage() {
               <RefreshCw className="w-4 h-4 mr-2" />
               Compare {showComparison && '(Deltas)'}
             </Button>
-              }}
-            />
           </div>
         </div>
 
