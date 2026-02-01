@@ -1,0 +1,5 @@
+file 'screenshots/1-main-dashboard-overview.png'
+file 'screenshots/2-compare-mode-active.png'
+file 'screenshots/3-date-picker-calendar.png'
+file 'screenshots/4-goals-section.png'
+file 'screenshots/5-export-and-chart.png'
