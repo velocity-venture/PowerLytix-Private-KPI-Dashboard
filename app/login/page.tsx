@@ -1,7 +1,8 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signIn } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,13 +17,10 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      if (email && password) {
-        router.push('/dashboard');
-      } else {
-        setError('Please enter email and password');
-      }
+      await signIn(email, password);
+      router.push('/dashboard');
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -62,7 +60,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="Enter your password"
               required
             />
           </div>
@@ -82,8 +80,8 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Demo Mode: Use any email/password to test
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Contact your administrator for account access
         </p>
       </div>
     </div>

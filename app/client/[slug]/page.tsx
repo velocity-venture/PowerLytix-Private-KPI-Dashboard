@@ -1,7 +1,9 @@
-﻿import { getClientBySlug } from '@/lib/clients';
+import { getClientBySlug } from '@/lib/clients';
 import { getLatestKpisForClient } from '@/lib/kpis';
 import { KpiGrid } from '@/components/kpi-grid';
 import { notFound } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ClientDashboardPage({
   params,
